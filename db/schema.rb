@@ -10,14 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_08_034211) do
-  create_table "posts", force: :cascade do |t|
-    t.string "account_name"
-    t.integer "mountain_list_id", null: false
+ActiveRecord::Schema[7.0].define(version: 2023_01_09_053416) do
+  create_table "mountains", force: :cascade do |t|
+    t.string "kana"
+    t.string "mountain_name"
+    t.string "prefecture"
+    t.integer "elevation"
+    t.string "latitude"
+    t.string "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["mountain_list_id"], name: "index_posts_on_mountain_list_id"
   end
 
-  add_foreign_key "posts", "mountain_lists"
+  create_table "posts", force: :cascade do |t|
+    t.string "account_name", null: false
+    t.integer "mountain_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mountain_id"], name: "index_posts_on_mountain_id"
+  end
+
+  add_foreign_key "posts", "mountains"
 end
