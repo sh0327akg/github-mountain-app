@@ -5,6 +5,17 @@ class Post < ApplicationRecord
 
   validate :exist_on_github
 
+  def scrape_github
+    agent = Mechanize.new
+    page = agent.get("https://github.com/#{account_name}")
+    grass = page.search('//h2[@class = "f4 text-normal mb-2"]').inner_text
+    grass.delete!('in the last year')
+    grass.delete!('cobuo')
+    grass.gsub(/[\r\n]/,"")
+
+    return grass.to_i
+  end
+
   private
 
   def exist_on_github

@@ -9,24 +9,14 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     grass = @post.scrape_github
-    Mountain.where()
-    @post.merge(mountain_id: Mountain.id)
+    mountains = Mountain.where('elevation <= ?', grass)
+    mountain = mountains.min_by {|x| (x.elevation - grass).abs}
+    @post.mountain_id = mountain.id
   end
 
   private
 
   def post_params
     params.require(:post).permit(:account_name)
-  end
-
-  def scrape_github
-    agent = Mechanize.new
-    page = agent.get("https://github.com/#{account_name}")
-    grass = page.search('//h2[@class = "f4 text-normal mb-2"]').inner_text
-    grass.delete!('in the last year')
-    grass.delete!('cobuo')
-    grass.gsub(/[\r\n]/,"")
-
-    return grass.to_i
   end
 end
