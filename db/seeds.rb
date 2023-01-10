@@ -1,7 +1,12 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+require 'csv'
+
+CSV.foreach("db/mountain-list.csv", headers: true) do |row|
+  Mountain.create(
+    kana: row[0],
+    mountain_name: row['山名<山頂名>'],
+    prefecture: row['都道府県'],
+    elevation: row['標高'],
+    latitude: row['緯度'],
+    longitude: row['経度'],
+  )
+end
